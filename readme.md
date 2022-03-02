@@ -260,7 +260,7 @@ is inherited from the project name).
 - Class fields/entity attributes are then asked for in the CLI prompt, by default the id is added to all entities.
 - To exit the CLI prompt messages for entity properties, use `CTRL + C`.
 
-### Relationships
+### Relationships (Brief)
 - Relationships can be created between entities, for example a movie has several actors and an actor shoots several
 movies (1..* - 1..*/Many to Many). To create such a relationship, first scaffold the `Actor` and `Movie` entities and then
 update the `Movies` entity by running `symfony console make:entity Movie`, add the relationship property `actors` and for the type
@@ -268,6 +268,38 @@ specify `ManyToMany`, the CLI prompt will ask if it should create a property for
 it is want or `no` if not. Conclude the relationship creation by hitting enter (a pivot table will also be created).
 - Note, the keyword `self` refers to the class itself, enforcing the constraint of operating on the class entity.
 
+### Relationships (Types)
+- When using a RDBMS, entities (tables) have relationships between each other, the various types available in doctrine are:
+  - ManyToOne  (1..* - 1)
+  - OneToMany  (1 - 1..*)
+  - ManyToMany (1..* -- 1..*)
+  - OneToOne   (1 -- 1)
+- These should be read from left to right (the left word refers to the current entity).
+```
+1. ManyToOne
+Many 'Students' are working on one school 'Project'
+One school 'Project' has many 'Students' that work on the 'Project'
+=> There are two possible strategies here,
+  a) Have a field, 'projectId' present in the 'Student' table acting as a FK to the 'Project' table.
+  b) Use a pivot/connection table to map projects and students (tuples), this table will have a composite
+  primary key (the studentId together with the projectId) and two foreign keys, projectId (ref. to the 'Project' table
+  and studentId (ref. to the 'Student' table).
+
+2. OneToMany
+One 'Country' has many 'States'
+One 'State' is located in only one 'Country'
+
+3. OneToOne
+One 'Person' has one 'Heart'
+There is one 'Heart' inside the body of one 'Person'
+=> heartId is added in the 'Person' table
+=> personId is added in the 'Heart' table
+
+4. ManyToMany
+Many Movies have many Actors
+One leading actor but there are more
+=> pivot table required 'movie_actor'
+```
 ### Migrations
 - After the creation of entities and their relationships, these need to be migrated to the database to actually
 create the tables and relationships. This is done through the CLI by running `symfony console make:migration`.
