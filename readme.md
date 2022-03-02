@@ -178,6 +178,9 @@ with the filename of the twig file to be rendered (see sample below).
 #### Variable embedding
 - Done using the "banana box syntax", `{{ variableName }}` where `variableName` is a key from the provided arguments'
 array of the render method, for example 'title' will be accessed with `{{ title }}`.
+#### Comments
+- Ref.: <a href="https://www.branchcms.com/learn/docs/developer/twig/comments">link</a>
+- Can be added in templates using this format `{# comment #}`.
 #### Debugging
 - To debug templates, we can use "dump(templateVariableName)" which in the case of the tile variable would
 output `string(17) "Avengers:Endgame"`
