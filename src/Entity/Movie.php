@@ -83,7 +83,7 @@ class Movie
 
     public function setImagePath(string $imagePath): self
     {
-        $this->$imagePath = $imagePath;
+        $this->imagePath = $imagePath;
 
         return $this;
     }

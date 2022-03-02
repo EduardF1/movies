@@ -308,3 +308,16 @@ for example `Version20220302164146.php`, in this file, two methods are present, 
 the changes that have occurred within the migration (the SQL that was executed) and the `down()` method is for reverting those changes
   (what happened when the `up()` method was executed).
 - To run the migration, run `symfony console doctrine:migrations:migrate`.
+
+### Data Fixtures
+- Used to populate database tables.
+- To install the required dependency, run `composer require --dev doctrine/doctrine-fixtures-bundle`.
+- Note, the `--dev` flag specifies a development dependency (excluded from production).
+- Run `symfony console doctrine:fixtures:load` to create a fixture creation template file. When working with multiple entities,
+a good practice would be to have one fixture loader per entity. After the first time the command is run, the sequential executions
+will either update or add new fixtures (from the `DataFixtures` directory).
+
+### MySQL Connection Error
+- If encountering the error "cannot connect user localhost to localhost", there are two options:
+  - Refer to <a href="https://stackoverflow.com/questions/10892689/cant-connect-to-mysql-server-on-localhost-10061-after-installation">this resource</>
+  - <a href="https://answers.microsoft.com/en-us/windows/forum/all/how-to-completely-uninstall-mysql/e90e1344-7b90-4319-8b2f-77b271ae66ed">Uninstall MySQL</a> and reinstall.
