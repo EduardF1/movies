@@ -152,3 +152,42 @@ it an array of strings with the needed values, for example `methods: ['GET', 'HE
 ### Available routes
 - To view/list the available HTTP endpoints (routes), run `symfony console debug:router`. This will list all the available routes
 in the application.
+
+### Twig
+- Templating engine used with Symfony, S.S.R. mechanics.
+- Importing (installation of dependency), run `composer require twig`.
+- After the previous command is executed, a new directory `templates` will be created in the root directory of the
+application. The `templates` directory is where all views will be stored/kept.
+- When using Twig, the endpoint resource's method will return a view (twig, for example `index.html.twig`),
+for this to be possible, in the endpoint resource's method the `render()` method must be used and provided an argument
+with the filename of the twig file to be rendered (see sample below).
+#### Sample
+```
+    // This is the route of the controller, "MoviesController.php"
+    #[Route('/movies', name: 'movies')]
+    public function index(): Response
+    {
+        return $this->render('index.html.twig');
+    }
+    
+    // This is the HTML content of the twig template
+    <h1>
+      Welcome to this Symfony course!.
+    </h1>
+```
+#### Variable embedding
+- Done using the "banana box syntax", `{{ variableName }}` where `variableName` is a key from the provided arguments'
+array of the render method, for example 'title' will be accessed with `{{ title }}`.
+#### Debugging
+- To debug templates, we can use "dump(templateVariableName)" which in the case of the tile variable would
+output `string(17) "Avengers:Endgame"`
+#### Conditional rendering
+- In the below code snippet (twig template), if title is set/provided (the value is not empty), the first
+paragraph will be rendered otherwise the second paragraph will be rendered.
+```
+{% if title %}
+  <p>{{title}} is a movie</p>
+{% else %}
+  <p>Whoops, no title has been set.</p>
+{% endif %}
+```
