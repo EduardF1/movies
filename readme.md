@@ -228,3 +228,51 @@ twig:
         author: EDFIS
         # other global variables will be added as tuples below `author`.
 ```
+
+# Doctrine ORM
+- Ref.: <a href="https://symfony.com/doc/current/doctrine.html">link</a>
+- Used for working with dynamic data.
+- `ORM` stands for Object relational mapper.
+- It treats PHP objects and classes as records and tables.
+- This prevents the usage of SQL for CRUD operations as they will be handled by Doctrine.
+### Prerequisites
+- Having MySQL installed.
+### Doctrine commands
+- Run `symfony console` and scroll up to the section titled `doctrine`.
+- (if the previous step presents errors or the `doctrine` section is missing):
+  - Run `composer require orm`.
+  - Run `composer require doctrine/doctrine-bundle`.
+  - Run `symfony console list doctrine` to list all the CLI commands available from doctrine.
+
+### Setup
+- Install dependencies:
+  - Run `composer require symfony/orm-pack`
+  - Run `composer require --dev symfony/maker-bundle`
+
+- Open the `.env` file found in the root of the application
+- Change the connection string from the default postgres to mysql and change
+the db_user and db_password values (to your local ones).
+- Run `symfony console doctrine:database:create` to create the database (note that the database name
+is inherited from the project name).
+
+### Entities
+- Run `symfony console make:entity`. This will create the (entity) model class and a repository for it.
+- Class fields/entity attributes are then asked for in the CLI prompt, by default the id is added to all entities.
+- To exit the CLI prompt messages for entity properties, use `CTRL + C`.
+
+### Relationships
+- Relationships can be created between entities, for example a movie has several actors and an actor shoots several
+movies (1..* - 1..*/Many to Many). To create such a relationship, first scaffold the `Actor` and `Movie` entities and then
+update the `Movies` entity by running `symfony console make:entity Movie`, add the relationship property `actors` and for the type
+specify `ManyToMany`, the CLI prompt will ask if it should create a property for the other part of the relationship in `Actor`, type `yes` if
+it is want or `no` if not. Conclude the relationship creation by hitting enter (a pivot table will also be created).
+- Note, the keyword `self` refers to the class itself, enforcing the constraint of operating on the class entity.
+
+### Migrations
+- After the creation of entities and their relationships, these need to be migrated to the database to actually
+create the tables and relationships. This is done through the CLI by running `symfony console make:migration`.
+- After the previous step is executed, a `migrations` directory is created, within it the migration version files are found,
+for example `Version20220302164146.php`, in this file, two methods are present, `up()` and `down()`. The `up()` method is for
+the changes that have occurred within the migration (the SQL that was executed) and the `down()` method is for reverting those changes
+  (what happened when the `up()` method was executed).
+- To run the migration, run `symfony console doctrine:migrations:migrate`.
