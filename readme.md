@@ -91,7 +91,7 @@ this can be installed using <a href="https://getcomposer.org/">Composer</a> by e
 will be the class name of the scaffolded controller). Example: `symfony console make:controller MoviesController`.
 - If facing the error <b style="color: red">There are no commands defined in the "make" namespaces.</b> either follow the suggestion or install
 the `maker bundle` by running the following command `composer require symfony maker-bundle --dev`, then the previous command (controller creation) can be run.
-### Sample
+#### Sample
 - After executing `symfony console make:controller MoviesController`, in `root/src/Controller` a file entitled "MoviesController.php" should be present and its
 contents should look similar to the below "Sample".
 ```
@@ -153,7 +153,7 @@ it an array of strings with the needed values, for example `methods: ['GET', 'HE
 - To view/list the available HTTP endpoints (routes), run `symfony console debug:router`. This will list all the available routes
 in the application.
 
-### Twig
+# Twig
 - Templating engine used with Symfony, S.S.R. mechanics.
 - Importing (installation of dependency), run `composer require twig`.
 - After the previous command is executed, a new directory `templates` will be created in the root directory of the
@@ -175,16 +175,16 @@ with the filename of the twig file to be rendered (see sample below).
       Welcome to this Symfony course!.
     </h1>
 ```
-#### Variable embedding
+### Variable embedding
 - Done using the "banana box syntax", `{{ variableName }}` where `variableName` is a key from the provided arguments'
 array of the render method, for example 'title' will be accessed with `{{ title }}`.
-#### Comments
+### Comments
 - Ref.: <a href="https://www.branchcms.com/learn/docs/developer/twig/comments">link</a>
 - Can be added in templates using this format `{# comment #}`.
-#### Debugging
+### Debugging
 - To debug templates, we can use "dump(templateVariableName)" which in the case of the tile variable would
 output `string(17) "Avengers:Endgame"`
-#### Conditional rendering
+### Conditional rendering
 - In the below code snippet (twig template), if title is set/provided (the value is not empty), the first
 paragraph will be rendered otherwise the second paragraph will be rendered.
 ```
@@ -193,4 +193,38 @@ paragraph will be rendered otherwise the second paragraph will be rendered.
 {% else %}
   <p>Whoops, no title has been set.</p>
 {% endif %}
+```
+### Looping
+- If values are sent (by the controller) in an array, within the template, they should be iterated over.
+#### Sample:
+```
+// Controller
+#[Route('/movies', name: 'movies')]
+public function index(): Response
+{
+    $movies = ['Avengers: Endgame', 'Inception', 'Loki', 'Black Widow'];
+    return $this->render('index.html.twig', array(
+        'movies' => $movies
+    ));
+}
+```
+```
+{# Twig template #}
+{% block body %}
+    {% for movie in movies %}
+        <li>{{ movie }}</li>
+    {% endfor %}
+{% endblock %}
+```
+### Global variables
+- `_self` used as `{{_self}}` will display the name of the currently viewed/accessed page.
+- `_charset` used as `{{_charset}}` will display the web document format (usually UTF-8).
+- Global variables can also be defined in `root/config/packages/twig.yaml` in the following way:
+```
+# under `default_path` add globals
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        author: EDFIS
+        # other global variables will be added as tuples below `author`.
 ```
