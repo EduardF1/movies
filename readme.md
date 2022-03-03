@@ -319,5 +319,32 @@ will either update or add new fixtures (from the `DataFixtures` directory).
 
 ### MySQL Connection Error
 - If encountering the error "cannot connect user localhost to localhost", there are two options:
-  - Refer to <a href="https://stackoverflow.com/questions/10892689/cant-connect-to-mysql-server-on-localhost-10061-after-installation">this resource</>
+  - Refer to <a href="https://stackoverflow.com/questions/10892689/cant-connect-to-mysql-server-on-localhost-10061-after-installation">this resource<a/>
   - <a href="https://answers.microsoft.com/en-us/windows/forum/all/how-to-completely-uninstall-mysql/e90e1344-7b90-4319-8b2f-77b271ae66ed">Uninstall MySQL</a> and reinstall.
+
+### Native Queries 
+- To execute native SQL, follow the below sample:
+```
+    // Here, through a SQL string, we are getting the descriptions of all movies in which 'Christian Bale' was. (Many to Many handling)
+    $sql = "SELECT m.description FROM movie m INNER JOIN movie_actor ma ON m.id = ma.movie_id INNER JOIN actor a ON a.id = ma.actor_id WHERE a.name LIKE 'Christian Bale'";
+    $sql = "SELECT * FROM movie m INNER JOIN movie_actor ma ON m.id = ma.movie_id INNER JOIN actor a ON a.id = ma.actor_id WHERE a.name LIKE 'Christian Bale'";
+    // Prepared statement, get the JDBC driver connection and preate the SQL to be executed
+    $stmt = $entityManager->getConnection()->prepare($sql);
+    // Execute the statement and return an array with all the rows structured as associative arrays.
+    $result = $stmt->executeQuery()->fetchAllAssociative();
+    // Return the data as JSON 
+     return new JsonResponse($result, Response::HTTP_OK);
+```
+
+### Repository methods
+```
+1. findAll() --> this is equivalent to 'SELECT * FROM entityName' where the entityName
+   is provided in $repository = $entityManager->getRepository(EntityName::class);
+2. find() --> used when trying to find a match (use of a WHERE clause, 'SELECT * FROM entityName WHERE id = 5'), example: find(5), using an id.
+3. findBy() --> return an array of objects matching a given condition, example: findBy([], ['id' => 'DESC']) by default, it
+   is 'ASC', equivalent to SQL 'SELECT * FROM entityName ORDER BY id DESC'.
+4. findOneBy() --> findOneBy(['id' => 1], ['title' => 'The Dark Knight'], ['id' => 'DESC']); Equivalent to SQL 'SELECT * FROM
+   movies WHERE id = 6 AND title = 'The Dark Knight' ORDER BY id DESC'
+5. count() --> count([]), 'select count() from entityName' or with condition count(['id' => 5]);
+6. getClassName() --> get the entity name
+```
